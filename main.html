@@ -2,9 +2,7 @@
 <html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#41414C" />
     <link rel="shortcut icon" href="images/new_favicon.png" type="image/png" />
     <title>Falling Image App</title>
 
@@ -56,10 +54,9 @@
                 
                 <script >
                   
-                  let id = ''
-                  let img_data = ''
-                  
-                  
+                  let img_array = []
+                  let blocked_pixels = []
+                  let image_id = ''
                   const delay = 250
 
                   const feature_codes = {
@@ -50523,7 +50520,7 @@
                   
                   async function melt(img_array,blocked_pixels){
                     const BACKGROUND_COLOR = 'A0A0A0'
-                    for (let i = 0;i<40;i++){
+                    for (let i = 0;i<30;i++){
 
                         for (let index = 24*24 ; index > 0; index--){
                             y = Math.floor(index/24)
@@ -50621,15 +50618,24 @@
                     return img_array
                   }
                   
-                  document.addEventListener('keypress',function (e){
-                    if (e.key === 'Enter'){
-                      let image_id = document.getElementById('image_id input').value
-                      //console.log(image_id)
-                      let data_src = `./images/json images/${image_id}.json`
-                      features = feature_map[image_id]
-                      console.log(features)
+                  document.addEventListener('input',()=>{
+                    image_id = document.getElementById('image_id input').value
+                    console.log(image_id)
+                    if (image_id==''){
+                        image_id='not_found'
+                    }
+                    let data_src = `./images/json images/${image_id}.json`
+                    
+                    fetch(data_src)
+                        .then(response=>response.json())
+                        .then(data=>{                      
+                          img_array = decode(data)
+                          draw_image(img_array,'selected_image')
+                        })
 
-                      let blocked_pixels = []
+                        features = feature_map[image_id]
+
+                      
                       document.getElementById('features_found').innerText = ''
                       for(const key1 in features){
                         document.getElementById('features_found').innerText += features[key1]+'\n'
@@ -50642,16 +50648,11 @@
                           }
                         }                     
                       }
-                      fetch(data_src)
-                        .then(response=>response.json())
-                        .then(data=>{
-                          
-                          let img_array = decode(data)
-                          draw_image(img_array,'selected_image')
-                          console.log('blocked_pixels')
-                          console.log(blocked_pixels)
-                          melt(img_array,blocked_pixels)
-                        })
+                  });
+
+                  document.addEventListener('keypress',function (e){
+                    if (e.key === 'Enter'){
+                        melt(img_array,blocked_pixels)
                     }
                   });
 
