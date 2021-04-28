@@ -108,16 +108,18 @@
                                 
                                 while (blocked_pixels.includes(`${x}:${y_down}`)){
                                   y_down+=1
+                                  while (blocked_pixels.includes(`${x_right}:${y_down}`)){
+                                    x_right-=1
+                                    if(x_right==0){break}
+                                    while (blocked_pixels.includes(`${x_left}:${y_down}`)){
+                                      x_left+=1
+                                      if(x_left==23){break}
+                                    }
+                                  }
                                 }
                                 
-                                while (blocked_pixels.includes(`${x_right}:${y_down}`)){
-                                  x_right-=1
-                                  if(x_right==0){break}
-                                }
-                                while (blocked_pixels.includes(`${x_left}:${y_down}`)){
-                                  x_left+=1
-                                  if(x_left==23){break}
-                                }
+                                
+                                
                                 
                                 if(img_array[x+y_down*24]==BACKGROUND_COLOR){
                                     //console.log('Down')
