@@ -46,34 +46,40 @@
                   <p id='features_found' style="color:black;"align='center' >-</p>
                   
                   <div class="input-group">
+                    
                     <label for="Falling FPS">
-                      Frames per second:
+                      Options:
                     </p>
                     <input
                       type="number"
                       id=fps
                       step="1" 
+                      placeholder = 'Frames per second'
                     />
-                  
+
                   </div>
+                  <button class="button orange" onclick='rotate()'>Rotate Image</button>
               </div>
 
               <div class="input-wrapper">
                 <label for="total-hours">Selected</label>
                 <div>
                   <canvas width="240" height="240" id='selected_image'>
+                  
                 </div>
+                
               </div>
             </div>
+            
           </fieldset>
-    
+          
         </div>
       </main>
       <aside class="card">
         <div>
           <canvas id='result_image' width="240" height="240"> </canvas>
         </div>
-                
+
         <script> 
           function save_image(){
             let image_id = document.getElementById('image_id input').value
@@ -93,12 +99,12 @@
           }
         </script>
         <button onclick='save_image()'
-          class="button green"  
-         >Download Image</button>
-
+              class="button green"  
+             >Download Image</button>
       </aside>
       
     </div>
+    
     <!-- end container -->
   </body>
 </html>

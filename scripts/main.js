@@ -14,6 +14,7 @@ fetch('blocked_pixels.json')
 //Melt will receive the image array and draw on the canvas(resutlt_image)
 async function melt(img_array,blocked_pixels){
     const BACKGROUND_COLOR = 'A0A0A0'
+    let img_array_melted = img_array
     for (let i = 0;i<N_LOOPS;i++){
         document.addEventListener('keypress',function (e){
             if (e.key === 'Enter'){i = N_LOOPS+1} //To exit the for loop
@@ -25,16 +26,16 @@ async function melt(img_array,blocked_pixels){
             if(blocked_pixels.includes(`${x}:${y}`)){
                 continue
             }
-            if(img_array[index]==BACKGROUND_COLOR){
+            if(img_array_melted[index]==BACKGROUND_COLOR){
                 continue
             }
             else if (x==23){ //right border
-                if (img_array[x-1+(y+1)*24] == BACKGROUND_COLOR){
-                    img_array[x-1+(y+1)*24] = img_array[x+y*24]}
+                if (img_array_melted[x-1+(y+1)*24] == BACKGROUND_COLOR){
+                    img_array_melted[x-1+(y+1)*24] = img_array_melted[x+y*24]}
             }
             else if (x==0){//#left border
-                if (img_array[x+1+(y+1)*24] == BACKGROUND_COLOR){
-                    img_array[x+1+(y+1)*24] = img_array[x+y*24]}
+                if (img_array_melted[x+1+(y+1)*24] == BACKGROUND_COLOR){
+                    img_array_melted[x+1+(y+1)*24] = img_array_melted[x+y*24]}
             }
             else{
                 
@@ -42,12 +43,12 @@ async function melt(img_array,blocked_pixels){
                 var y_down = y+1
                 var x_right= x-1
                 var x_left = x+1
-                
+                //Pixels goes throught the fixed features
                 while (blocked_pixels.includes(`${x}:${y_down}`)){
                     y_down+=1
                     while (blocked_pixels.includes(`${x_right}:${y_down}`)){
-                    x_right-=1
-                    if(x_right==0){break} 
+                        x_right-=1
+                        if(x_right==0){break} 
                     }
                     while (blocked_pixels.includes(`${x_left}:${y_down}`)){
                         x_left+=1
@@ -55,24 +56,24 @@ async function melt(img_array,blocked_pixels){
                     }
                 }
 
-                if(img_array[x+y_down*24]==BACKGROUND_COLOR){
-                    img_array[x+y_down*24] = img_array[x+y*24]
-                    img_array[x+y*24] = BACKGROUND_COLOR
+                if(img_array_melted[x+y_down*24]==BACKGROUND_COLOR){
+                    img_array_melted[x+y_down*24] = img_array_melted[x+y*24]
+                    img_array_melted[x+y*24] = BACKGROUND_COLOR
                 }
                 /*Randomness
-                else if (img_array[x_right+y_down*24] == BACKGROUND_COLOR && img_array[x_left+y_down*24] == BACKGROUND_COLOR){
+                else if (img_array_melted[x_right+y_down*24] == BACKGROUND_COLOR && img_array_melted[x_left+y_down*24] == BACKGROUND_COLOR){
                     d = Math.round(Math.random())
                     //console.log(d)
-                    img_array[(x+d)+y_down*24] = img_array[x+y*24]
-                    img_array[x+y*24] = BACKGROUND_COLOR
+                    img_array_melted[(x+d)+y_down*24] = img_array_melted[x+y*24]
+                    img_array_melted[x+y*24] = BACKGROUND_COLOR
                 }*/
-                else if (img_array[x_right+y_down*24] != BACKGROUND_COLOR && img_array[x_left+y_down*24] == BACKGROUND_COLOR){
-                    img_array[x_left+y_down*24] = img_array[x+y*24]
-                    img_array[x+y*24] = BACKGROUND_COLOR
+                else if (img_array_melted[x_right+y_down*24] != BACKGROUND_COLOR && img_array_melted[x_left+y_down*24] == BACKGROUND_COLOR){
+                    img_array_melted[x_left+y_down*24] = img_array_melted[x+y*24]
+                    img_array_melted[x+y*24] = BACKGROUND_COLOR
                 }
-                else if (img_array[x_right+y_down*24] == BACKGROUND_COLOR && img_array[x_left+y_down*24] != BACKGROUND_COLOR){
-                    img_array[x_right+y_down*24] = img_array[x+y*24]
-                    img_array[x+y*24] = BACKGROUND_COLOR
+                else if (img_array_melted[x_right+y_down*24] == BACKGROUND_COLOR && img_array_melted[x_left+y_down*24] != BACKGROUND_COLOR){
+                    img_array_melted[x_right+y_down*24] = img_array_melted[x+y*24]
+                    img_array_melted[x+y*24] = BACKGROUND_COLOR
                 }
                 else{
                     continue
@@ -80,8 +81,21 @@ async function melt(img_array,blocked_pixels){
             }
         }
         await sleep(delay);
-        draw_image(img_array,"result_image") 
+        draw_image(img_array_melted,"result_image") 
     }
+}
+
+function rotate(){
+    let img_array_rotated = []
+    for (let index = 24*24  ; index >= 0; index--){
+        y       = Math.floor(index/24)
+        x       = index%24
+        a_index = x+y*24
+        b_index = (y)+(23-x)*24
+        img_array_rotated[b_index] = img_array[a_index]
+    }
+    img_array =  img_array_rotated
+    draw_image(img_array_rotated,'selected_image')
 }
 
 function sleep(ms) {
