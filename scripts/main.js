@@ -25,6 +25,9 @@ async function melt(img_array,blocked_pixels){
         document.addEventListener('keypress',function (e){
             if (e.key === 'Enter'){i = N_LOOPS+1} //To exit the for loop
         })  
+        document.getElementById("fall").addEventListener("click", function(){
+            i = N_LOOPS+1 //To exit the for loop
+        })  
                 
         for (let index = 24*24 ; index > 0; index--){
             y = Math.floor(index/24)
