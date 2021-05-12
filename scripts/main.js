@@ -4,12 +4,18 @@ let blocked_pixels = []
 let image_id = ''
 let delay = 250
 let bp = {}
+let features = {}
 const N_LOOPS = 40 // number of time the melt function will loop
 
 //Get array of pixels that have to be blocked on each image
 fetch('blocked_pixels.json')
     .then(response=>response.json())
     .then(data=>{bp = data}) 
+
+//Get which pictures have which features
+fetch('feature_map.json')
+    .then(response=>response.json())
+    .then(data=>{features = data}) 
 
 //Melt will receive the image array and draw on the canvas(resutlt_image)
 async function melt(img_array,blocked_pixels){
@@ -133,7 +139,10 @@ function decode(data){
 //Every time the user input a number it will get the value of input box and draw the image
 document.addEventListener('input',()=>{
     image_id = parseInt(document.getElementById('image_id input').value)
-
+    document.getElementById('features_found').innerText = ''
+    for(let key of features[image_id]){
+        document.getElementById('features_found').innerText += key+'\n'
+    }
     if (isNaN(image_id) || image_id>10000){
         image_id='not_found'
     }
